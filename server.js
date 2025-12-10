@@ -1,20 +1,27 @@
-// server.js (o app.js)
+// server.js (Archivo en la RAÍZ)
+require('dotenv').config();
 
-// ...
 const express = require('express');
+const cors = require('cors');
+
+// 1. IMPORTACIÓN CORREGIDA para la estructura real (src/routers/user.Routes.js)
+const userRoutes = require('./src/routers/user.Routes.js'); 
+const todoRoutes = require('./src/routers/todo.Routes.js'); 
+const rolesRoutes = require('./src/routers/roles.Routes.js'); 
 const app = express();
-// ...
+const PORT = process.env.PORT || 5000; 
 
-// 1. Importa el archivo de rutas de usuarios
-const userRoutes = require('./routes/userRoutes'); 
+// MIDDLEWARE
+app.use(cors());
+app.use(express.json());
 
-// 2. Conecta el router a un prefijo de API
-// Aquí le dices a Express: "Todo lo que empiece con /api/usuarios, mándalo a userRoutes."
-app.use('/api/usuarios', userRoutes); 
+// 2. ENDPOINT CORREGIDO (URL limpia: /api/usuarios)
+app.use('/api/user', userRoutes); 
+app.use('/api/todo', todoRoutes); 
+app.use('/api/roles', rolesRoutes); 
 
-// ...
-
+// INICIAR SERVIDOR
 app.listen(PORT, () => {
-    console.log(`🚀 Servidor Express ejecutándose en: http://localhost:${PORT}`);
-    console.log(`Prueba el endpoint de recursos: http://localhost:${PORT}/api/recursos`);
+    console.log(`✅ Servidor Express iniciado y escuchando en: http://localhost:${PORT}`);
+    console.log('API LISTA ');
 });

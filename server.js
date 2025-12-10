@@ -1,56 +1,18 @@
-// 1. IMPORTACIONES
+// server.js (o app.js)
+
+// ...
 const express = require('express');
-const cors = require('cors');
-
-// 2. CONFIGURACIÓN Y MIDDLEWARE
 const app = express();
-const PORT = 10000; // Puerto donde se ejecutará el backend
+// ...
 
-// Middleware de CORS: Permite peticiones desde dominios diferentes (como tu frontend React en el puerto 3000)
-app.use(cors());
+// 1. Importa el archivo de rutas de usuarios
+const userRoutes = require('./routes/userRoutes'); 
 
-// Middleware para parsear JSON: Permite a Express leer datos en formato JSON enviados en el cuerpo (body) de las peticiones (POST, PUT)
-app.use(express.json());
+// 2. Conecta el router a un prefijo de API
+// Aquí le dices a Express: "Todo lo que empiece con /api/usuarios, mándalo a userRoutes."
+app.use('/api/usuarios', userRoutes); 
 
-
-// 3. RUTAS (Endpoints de tu API)
-// =================================================================
-
-// Ruta Raíz (GET /)
-app.get('/', (req, res) => {
-    // Envía una respuesta de texto simple
-    res.send('¡Servidor Express Funcionando Correctamente!');
-});
-
-// Ruta API de Ejemplo (GET /api/recursos)
-app.get('/api/recursos', (req, res) => {
-    // Ejemplo de datos (normalmente vendrían de una base de datos)
-    const data = [
-        { id: 1, nombre: 'Recurso A', descripcion: 'Primer elemento' },
-        { id: 2, nombre: 'Recurso B', descripcion: 'Segundo elemento' }
-    ];
-    // Envía la respuesta en formato JSON
-    res.json({ 
-        mensaje: 'Lista de recursos obtenida con éxito',
-        datos: data 
-    });
-});
-
-// Ruta para recibir datos (POST /api/nuevo)
-app.post('/api/nuevo', (req, res) => {
-    const nuevoRecurso = req.body; // Los datos enviados por el frontend
-    console.log('Recibido nuevo recurso:', nuevoRecurso);
-
-    // Simular el guardado de datos y devolver una respuesta
-    res.status(201).json({ 
-        mensaje: 'Recurso creado',
-        data: nuevoRecurso,
-        timestamp: new Date()
-    });
-});
-
-// 4. LEVANTAMIENTO DEL SERVIDOR
-// =================================================================
+// ...
 
 app.listen(PORT, () => {
     console.log(`🚀 Servidor Express ejecutándose en: http://localhost:${PORT}`);

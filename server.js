@@ -5,7 +5,7 @@ const express = require('express');
 const cors = require('cors');
 
 // 💡 1. IMPORTAR LA FUNCIÓN DE CONEXIÓN A LA DB
-const { connectDB } = require('./db'); 
+const { connectDB } = require('./src/config/db.js'); 
 
 // IMPORTACIÓN DE RUTAS
 const userRoutes = require('./src/routers/user.Routes.js'); 

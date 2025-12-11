@@ -1,25 +1,28 @@
 const { Sequelize } = require('sequelize');
 
 // --- 1. Cargar Configuración desde el Entorno (.env) ---
-// NOTA: En un proyecto real, estas variables se cargarían automáticamente 
-// con librerías como 'dotenv', pero las usaremos directamente para el ejemplo.
 
 const DB_NAME = process.env.DB_NAME || 'Railway';
 const DB_USER = process.env.DB_USER || 'root';
 const DB_PASS = process.env.DB_PASS || 'sPxygXsrXoWJfPUUCCcqOHmggBnpsmyi'; 
 const DB_HOST = process.env.DB_HOST || 'maglev.proxy.rlwy.net';
 const DB_PORT = process.env.DB_PORT || 33159;
-const DB_DIALECT = process.env.DB_DIALECT || 'mysql'; // Debería ser 'mysql'
+const DB_DIALECT = process.env.DB_DIALECT || 'mysql'; 
 
 // --- 2. Crear Instancia de Sequelize ---
 const sequelize = new Sequelize(
-    DB_NAME,   Railway,
-    DB_USER,   root,
-    DB_PASS, sPxygXsrXoWJfPUUCCcqOHmggBnpsmyi,
+    // 1. Usa las variables que ya definiste. NO repitas los strings 'Railway', 'root', etc.
+    DB_NAME, 
+    DB_USER, 
+    DB_PASS,
     {
-        host: DB_HOST,
+        host: DB_HOST, 
         port: DB_PORT,
-        dialect: DB_DIALECT, mysql,                 
+        
+        // CORRECCIÓN CLAVE: La propiedad 'dialect' debe tener solo un valor.
+        // Aquí se usa la variable DB_DIALECT, que ya tiene 'mysql'.
+        dialect: DB_DIALECT, 
+        
         logging: false, // Opcional: Deshabilita el logging de SQL en consola
         pool: { // Configuración del Pool de conexiones
             max: 5,

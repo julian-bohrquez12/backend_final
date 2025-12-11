@@ -1,48 +1,74 @@
 // src/controllers/user.controller.js
-const UserModel = require('../models/UserData'); // Importa la simulación de DB
+const User = require('../models/User');
 
-// 1. CREAR (POST)
-const createUser = (req, res) => {
+// CREATE
+exports.createUser = async (req, res) => {
     try {
-        const newUser = UserModel.create(req.body); 
-        res.status(201).json({ success: true, message: 'Usuario creado (Simulado)', data: newUser });
+        const newUser = await User.create(req.body);
+
+        res.status(201).json({
+            success: true,
+            message: "Usuario creado correctamente.",
+            data: newUser
+        });
+
     } catch (error) {
-         res.status(500).json({ success: false, message: 'Error en la simulación.' });
+        console.error("❌ Error al crear usuario:", error);
+        res.status(500).json({ message: "Error interno del servidor." });
     }
 };
 
-// 2. OBTENER TODOS (GET)
-const getAllUsers = (req, res) => {
-    const users = UserModel.findAll();
-    res.status(200).json({ success: true, count: users.length, data: users });
+// READ ALL
+exports.getAllUsers = async (req, res) => {
+    const users = await User.findAll({
+        attributes: { exclude: ['Password'] }
+    });
+
+    res.status(200).json({
+        success: true,
+        count: users.length,
+        data: users
+    });
 };
 
-// 3. OBTENER POR ID (GET)
-const getUserById = (req, res) => {
-    const user = UserModel.findById(req.params.id);
-    if (!user) return res.status(404).json({ success: false, message: 'Usuario no encontrado.' });
+// READ BY ID
+exports.getUserById = async (req, res) => {
+    const user = await User.findByPk(req.params.id, {
+        attributes: { exclude: ['Password'] }
+    });
+
+    if (!user)
+        return res.status(404).json({ message: "Usuario no encontrado." });
+
     res.status(200).json({ success: true, data: user });
 };
 
-// 4. ACTUALIZAR (PUT)
-const updateUser = (req, res) => {
-    const updatedUser = UserModel.update(req.params.id, req.body);
-    if (!updatedUser) return res.status(404).json({ success: false, message: 'Usuario no encontrado.' });
-    res.status(200).json({ success: true, message: 'Usuario actualizado.', data: updatedUser });
+// UPDATE
+exports.updateUser = async (req, res) => {
+    const user = await User.findByPk(req.params.id);
+
+    if (!user)
+        return res.status(404).json({ message: "Usuario no encontrado." });
+
+    await user.update(req.body);
+
+    res.status(200).json({
+        success: true,
+        message: "Usuario actualizado."
+    });
 };
 
-// 5. ELIMINAR (DELETE)
-const deleteUser = (req, res) => {
-    const success = UserModel.delete(req.params.id);
-    if (!success) return res.status(404).json({ success: false, message: 'Usuario no encontrado para eliminar.' });
-    res.status(200).json({ success: true, message: 'Usuario eliminado.' });
-};
+// DELETE
+exports.deleteUser = async (req, res) => {
+    const user = await User.findByPk(req.params.id);
 
-// 6. EXPORTACIÓN OBLIGATORIA
-module.exports = {
-    createUser,
-    getAllUsers,
-    getUserById,
-    updateUser,
-    deleteUser
+    if (!user)
+        return res.status(404).json({ message: "Usuario no encontrado." });
+
+    await user.destroy();
+
+    res.status(200).json({
+        success: true,
+        message: "Usuario eliminado."
+    });
 };
